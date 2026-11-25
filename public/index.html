@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockWise  Monochrome Inventory Dashboard</title>
+  <link rel="stylesheet" href="/dashboard/css/style.css" />
+</head>
+<body>
+  <aside id="sidebar">
+    <div class="logo-area">
+      <span class="logo-text">STOCKWISE</span>
+      <button class="toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Sidebar">☰</button>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/dashboard/index.html"><i>■</i> <span>Dashboard</span></a></li>
+        <li><a href="/dashboard/inventory.html"><i>□</i> <span>Inventory</span></a></li>
+        <li><a href="/dashboard/form.html"><i>□</i> <span>Add / Edit Item</span></a></li>
+        <li><a href="/dashboard/reports.html"><i>□</i> <span>Reports &amp; Categories</span></a></li>
+        <li><a href="/dashboard/settings.html"><i>□</i> <span>Settings &amp; API</span></a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <div><strong>Lahai Simone Swaray</strong></div>
+      <div>NIM: 202500402*8</div>
+      <div>Express 5 In-Memory API</div>
+    </div>
+  </aside>
+
+  <main>
+    <header role="banner">
+      <hgroup class="project-name">
+        <h2>Dashboard Overview</h2>
+        <h3 aria-label="Version or Status">StockWise &bull; Small Shop Inventory Management System</h3>
+      </hgroup>
+      <div class="header-right" aria-live="polite" aria-atomic="true">
+        <div class="api-status-badge" title="Real-time Express 5 API telemetry">
+          <span class="status-dot"></span>
+          <span id="apiTraceText">GET /products &bull; Ready</span>
+        </div>
+        <div class="date-display" id="currentDate"></div>
+      </div>
+    </header>
+
+    <!-- 4 KPI Cards (Mapped from Mono-Inventory-Dashboard + Stock Guru IDs) -->
+    <div class="kpi-grid">
+      <div class="card">
+        <span class="card-title">Total Products</span>
+        <span class="card-value" id="totalItems">0</span>
+        <span class="card-sub" id="total-product-value">0 active SKUs</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Total Physical Stock</span>
+        <span class="card-value" id="totalStock">0</span>
+        <span class="card-sub"><span id="low-stock-value">0</span> low &bull; <span id="out-of-stock-value">0</span> out</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Asset Valuation</span>
+        <span class="card-value" id="totalValue">Rp 0</span>
+        <span class="card-sub" id="total-value">Retail inventory value</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Highest Value Item</span>
+        <span class="card-value" style="font-size: 1.15rem; margin-top: auto;" id="bestSeller">-</span>
+        <span class="card-sub" id="bestSellerMeta">Top inventory asset</span>
+      </div>
+    </div>
+
+    <!-- Middle Grid: HTML5 Canvas Stock/Value Chart + Low Stock (< 10) Alert List -->
+    <div class="content-grid">
+      <div class="section-box">
+        <div class="section-header">
+          <h2>Inventory Valuation by Product (Live HTML5 Canvas)</h2>
+          <span class="date-display">Rendered via CanvasRenderingContext2D</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <div class="section-header">
+          <h2>Low Stock Alert (&lt; 10 Units)</h2>
+          <a href="/dashboard/form.html" class="mono-btn mono-btn-outline mono-btn-sm">+ Restock</a>
+        </div>
+        <div id="lowStockList"></div>
+      </div>
+    </div>
+
+    <!-- Complete Inventory Table with Search, Category Filter, Sort, and CRUD -->
+    <div class="section-box" style="flex: 1;">
+      <div class="section-header">
+        <div>
+          <h2>Complete Inventory Ledger</h2>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Click any column header to sort &bull; Connected to Express 5 <code>/products</code></div>
+        </div>
+        <div class="toolbar-group">
+          <a href="/dashboard/form.html" class="mono-btn">+ Add Product</a>
+          <button type="button" class="mono-btn mono-btn-outline" onclick="exportToCSV()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="toolbar-row">
+        <div class="toolbar-group">
+          <input
+            type="search"
+            id="searchBar"
+            class="mono-input"
+            placeholder="Search name, SKU, or description..."
+            style="min-width: 240px;"
+          />
+          <select id="categories" class="mono-select" onchange="filterCategory()">
+            <option value="All">All Categories (/products/category)</option>
+          </select>
+          <select id="sort" class="mono-select" onchange="sortProducts()">
+            <option value="Oldest First">Sort: ID (Asc)</option>
+            <option value="Newest First">Sort: Newest First</option>
+            <option value="Name (A–Z)">Sort: Name (A–Z)</option>
+            <option value="Name (Z–A)">Sort: Name (Z–A)</option>
+            <option value="Price (Low → High)">Sort: Price (Low → High)</option>
+            <option value="Price (High → Low)">Sort: Price (High → Low)</option>
+            <option value="Quantity (Low → High)">Sort: Stock (Low → High)</option>
+            <option value="Quantity (High → Low)">Sort: Stock (High → Low)</option>
+          </select>
+        </div>
+
+        <div class="toolbar-group">
+          <label for="authTokenInput" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">DELETE Token:</label>
+          <input
+            type="text"
+            id="authTokenInput"
+            class="mono-input"
+            value="stockwise-secret-2026"
+            style="width: 175px; font-family: monospace;"
+          />
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table id="inventoryTable">
+          <thead>
+            <tr>
+              <th onclick="sortTable('id')">ID ↕</th>
+              <th onclick="sortTable('sku')">SKU ↕</th>
+              <th onclick="sortTable('name')">Product Name ↕</th>
+              <th onclick="sortTable('category')">Category ↕</th>
+              <th onclick="sortTable('price')" id="unitPriceHeading">Unit Price (IDR) ↕</th>
+              <th onclick="sortTable('stock')">Stock ↕</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <script src="/dashboard/js/app.js"></script>
+</body>
+</html>

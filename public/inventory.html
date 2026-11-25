@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory Database — StockWise</title>
+  <link rel="stylesheet" href="/dashboard/css/style.css" />
+</head>
+<body>
+  <aside id="sidebar">
+    <div class="logo-area">
+      <span class="logo-text">STOCKWISE</span>
+      <button class="toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Sidebar">☰</button>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/dashboard/index.html"><i>□</i> <span>Dashboard</span></a></li>
+        <li><a href="/dashboard/inventory.html"><i>■</i> <span>Inventory</span></a></li>
+        <li><a href="/dashboard/form.html"><i>□</i> <span>Add / Edit Item</span></a></li>
+        <li><a href="/dashboard/reports.html"><i>□</i> <span>Reports &amp; Categories</span></a></li>
+        <li><a href="/dashboard/settings.html"><i>□</i> <span>Settings &amp; API</span></a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <div><strong>Lahai Simone Swaray</strong></div>
+      <div>NIM: 202500402*8</div>
+      <div>Express 5 In-Memory API</div>
+    </div>
+  </aside>
+
+  <main>
+    <header role="banner">
+      <hgroup class="project-name">
+        <h2>Inventory Management</h2>
+        <h3 aria-label="Version or Status">Product Database &bull; Express 5 CRUD Operations</h3>
+      </hgroup>
+      <div class="header-right" aria-live="polite" aria-atomic="true">
+        <div class="api-status-badge">
+          <span class="status-dot"></span>
+          <span id="apiTraceText">GET /products &bull; Ready</span>
+        </div>
+        <div class="date-display" id="currentDate"></div>
+      </div>
+    </header>
+
+    <div class="section-box">
+      <div class="section-header">
+        <div>
+          <h2>Product Database (<code>/products</code>)</h2>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Manage stock quantities, filter by category, search, or export to CSV</div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="/dashboard/form.html" class="mono-btn">+ Add Product</a>
+          <button type="button" class="mono-btn mono-btn-outline" onclick="exportToCSV()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="toolbar-row">
+        <div class="toolbar-group">
+          <input
+            type="search"
+            id="searchBar"
+            class="mono-input"
+            placeholder="Search products (?name=keyword)..."
+            style="min-width: 240px;"
+          />
+          <select id="categories" class="mono-select" onchange="filterCategory()">
+            <option value="All">All Categories</option>
+          </select>
+          <select id="sort" class="mono-select" onchange="sortProducts()">
+            <option value="Oldest First">Sort: ID (Asc)</option>
+            <option value="Newest First">Sort: Newest First</option>
+            <option value="Name (A–Z)">Sort: Name (A–Z)</option>
+            <option value="Name (Z–A)">Sort: Name (Z–A)</option>
+            <option value="Price (Low → High)">Sort: Price (Low → High)</option>
+            <option value="Price (High → Low)">Sort: Price (High → Low)</option>
+            <option value="Quantity (Low → High)">Sort: Stock (Low → High)</option>
+            <option value="Quantity (High → Low)">Sort: Stock (High → Low)</option>
+          </select>
+        </div>
+
+        <div class="toolbar-group">
+          <label for="authTokenInput" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">DELETE Token:</label>
+          <input
+            type="text"
+            id="authTokenInput"
+            class="mono-input"
+            value="stockwise-secret-2026"
+            style="width: 175px; font-family: monospace;"
+          />
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table id="inventoryTable">
+          <thead>
+            <tr>
+              <th onclick="sortTable('id')">ID ↕</th>
+              <th onclick="sortTable('sku')">SKU ↕</th>
+              <th onclick="sortTable('name')">Product Name ↕</th>
+              <th onclick="sortTable('category')">Category ↕</th>
+              <th onclick="sortTable('price')" id="unitPriceHeading">Unit Price (IDR) ↕</th>
+              <th onclick="sortTable('stock')">Stock ↕</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <script src="/dashboard/js/app.js"></script>
+</body>
+</html>

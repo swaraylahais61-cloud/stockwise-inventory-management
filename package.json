@@ -1,0 +1,25 @@
+{
+  "name": "stockwise inventory-api",
+  "version": "1.0.0",
+  "description": "StockWise — Small Shop Inventory Management REST API built with Node.js and Express 5",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "express5",
+    "rest-api",
+    "inventory",
+    "stockwise",
+    "midterm-project"
+  ],
+  "author": "Lahai Simone Swaray(202500402*8)",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

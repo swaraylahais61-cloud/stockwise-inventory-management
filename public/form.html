@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add / Edit Product  StockWise</title>
+  <link rel="stylesheet" href="/dashboard/css/style.css" />
+</head>
+<body>
+  <aside id="sidebar">
+    <div class="logo-area">
+      <span class="logo-text">STOCKWISE</span>
+      <button class="toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Sidebar">☰</button>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/dashboard/index.html"><i>□</i> <span>Dashboard</span></a></li>
+        <li><a href="/dashboard/inventory.html"><i>□</i> <span>Inventory</span></a></li>
+        <li><a href="/dashboard/form.html"><i>■</i> <span>Add / Edit Item</span></a></li>
+        <li><a href="/dashboard/reports.html"><i>□</i> <span>Reports &amp; Categories</span></a></li>
+        <li><a href="/dashboard/settings.html"><i>□</i> <span>Settings &amp; API</span></a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <div><strong>Lahai Simone Swaray</strong></div>
+      <div>NIM: 202500402*8</div>
+      <div>Express 5 In-Memory API</div>
+    </div>
+  </aside>
+
+  <main>
+    <header role="banner">
+      <hgroup class="project-name">
+        <h2 id="formHeading">Add Product</h2>
+        <h3 aria-label="Version or Status">Create or Update Express 5 Product Record</h3>
+      </hgroup>
+      <div class="header-right" aria-live="polite" aria-atomic="true">
+        <div class="api-status-badge">
+          <span class="status-dot"></span>
+          <span id="apiTraceText">POST /products &bull; Ready</span>
+        </div>
+        <a href="/dashboard/index.html" class="mono-btn mono-btn-outline mono-btn-sm">← Back to Dashboard</a>
+      </div>
+    </header>
+
+    <div class="content-grid">
+      <div class="section-box">
+        <div class="section-header">
+          <h2>Product Details</h2>
+          <span class="status-badge" id="previewEndpoint">POST /products</span>
+        </div>
+
+        <form id="productForm">
+          <input type="hidden" id="editingProductId" value="" />
+
+          <div class="input-group">
+            <label for="productName">
+              <span>Product Name *</span>
+            </label>
+            <input type="text" id="productName" placeholder="Enter product name" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="input-group">
+              <label for="category">Category *</label>
+              <select id="category" required>
+                <option value="">Select Category</option>
+                <option value="Peripherals">Peripherals</option>
+                <option value="Audio">Audio</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Workspace">Workspace</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Stationery">Stationery</option>
+                <option value="Networking">Networking</option>
+                <option value="Storage">Storage</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="sku">SKU (Auto if blank)</label>
+              <input type="text" id="sku" placeholder="e.g., PER-LOG-101" />
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="input-group">
+              <label for="price" id="priceLabel">Price (Rupiah/IDR) *</label>
+              <input type="number" id="price" placeholder="Enter price in Rupiah" min="0" step="1" required />
+            </div>
+
+            <div class="input-group">
+              <label for="quantity">Quantity (Stock) *</label>
+              <input type="number" id="quantity" placeholder="Enter quantity" min="0" step="1" required />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="description">Description</label>
+            <textarea id="description" rows="3" placeholder="Short product specification or shelf note..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <a href="/dashboard/index.html" class="mono-btn mono-btn-outline">Cancel</a>
+            <button type="reset" class="mono-btn mono-btn-outline" id="resetBtn">Clear</button>
+            <button type="submit" class="btn-save" id="submit">
+              <span id="submitBtnText">Add Product</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="section-box">
+        <div class="section-header">
+          <h2>Real-Time Record Preview</h2>
+          <span class="status-badge" id="previewStatusBadge">In Stock</span>
+        </div>
+
+        <div class="list-item">
+          <span class="item-name">Lot Valuation</span>
+          <span class="status-badge" id="previewLotValue">Rp 0</span>
+        </div>
+        <div class="list-item">
+          <span class="item-name">Resolved SKU</span>
+          <span class="status-badge" id="previewSkuCode">AUTO-GEN</span>
+        </div>
+        <div class="list-item">
+          <span class="item-name">Stock Quantity</span>
+          <span class="status-badge" id="previewStockUnits">0 units</span>
+        </div>
+
+        <div style="margin-top: 18px;">
+          <label style="display:block; font-size:0.8rem; color:var(--text-muted); font-weight:600; margin-bottom:8px;">
+            EXPRESS 5 JSON REQUEST BODY
+          </label>
+          <pre class="json-preview-box" id="previewJsonPayload">{}</pre>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <script src="/dashboard/js/app.js"></script>
+</body>
+</html>
